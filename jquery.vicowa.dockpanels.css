@@ -1,0 +1,187 @@
+.jq-vcw-dp-maincontainer .jq-vcw-dp-container
+{
+    position: absolute;
+    min-width: 1em;
+    min-height: 1em;
+    overflow: hidden;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-center
+{
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-left
+{
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-top
+{
+    left: 0;
+    top: 0;
+    right: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-right
+{
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-bottom
+{
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-vertical
+{
+    top: 0;
+    bottom: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-horizontal
+{
+    left: 0;
+    right: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-splitter
+{
+    min-height: .35em;
+    min-width: .35em;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-splitter.jq-vcw-dp-vertical
+{
+    cursor: ew-resize;
+    max-width: .35em;
+    height: 100%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-splitter.jq-vcw-dp-horizontal
+{
+    cursor: ns-resize;   
+    max-height: .35em;
+    width: 100%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-splitter-panel
+{
+    box-shadow: 2px 2px 4px inset;
+    background: #fff;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dragging
+{
+    z-index: 9;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-mousetransparent
+{
+    pointer-events: none;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-drop-highlight
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 0.3;
+    background: #a1dcfc;
+    border: solid 5px gray;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-drop-highlight.jq-vcw-dp-left
+{
+    right: 75%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-drop-highlight.jq-vcw-dp-right
+{
+    left: 75%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-drop-highlight.jq-vcw-dp-top
+{
+    bottom: 75%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-drop-highlight.jq-vcw-dp-bottom
+{
+    top: 75%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dragging
+{
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-container-handler
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 20px;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-container-content
+{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 27px;
+}
+
+.jq-vcw-dp-maincontainer > .jq-vcw-dp-container > .jq-vcw-dp-container-content
+{
+    top: 0px;
+}
+
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-e,
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-w
+{
+    width: 14px;
+}
+
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-n,
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-s
+{
+    height: 14px;
+}
+
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-sw,
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-nw,
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-ne
+{
+    width: 12px;
+    height: 12px;
+}
+
+.jq-vcw-dp-maincontainer .ui-resizable-handle.ui-resizable-se
+{
+    right: -5px;
+    bottom: -5px;
+}
+
+.jq-vcw-dp-nouserselect
+{
+    cursor: default;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;    
+}

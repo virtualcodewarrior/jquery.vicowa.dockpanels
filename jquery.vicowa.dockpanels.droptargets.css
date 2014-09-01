@@ -1,0 +1,178 @@
+/* droptargets */
+.jq-vcw-dp-maincontainer .jq-vcw-dp-globaldropoverlay,
+.jq-vcw-dp-maincontainer .jq-vcw-dp-containerdropoverlay
+{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-left
+{
+    position: absolute;
+    left: 1em;
+    margin-top: -20px;
+    top: 50%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-right
+{
+    position: absolute;
+    right: 1em;
+    margin-top: -20px;
+    top: 50%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-top
+{
+    position: absolute;
+    top: 1em;
+    left: 50%;
+    margin-left: -20px;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-bottom
+{
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    margin-left: -20px;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-fourway
+{
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    top: 50%;
+    margin-left: -60px;
+    margin-top: -60px;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer
+{
+    display: table-cell;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer,
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-dropspacer
+{
+    display: table-cell;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-fourway .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-left
+{
+    border-right: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-fourway .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-right
+{
+    border-left: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-fourway .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-top
+{
+    border-bottom: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-fourway .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-bottom
+{
+    border-top: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp.jq-vcw-dp-fourway .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-center
+{
+    border: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer
+{
+    position: relative;
+    border: 1px solid gray;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptargetcontainer .jq-vcw-dp-background
+{
+    background: white;
+    opacity: 0.7;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptarget
+{
+    border: 1px solid gray;
+    border-radius: 3px;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    right: 3px;
+    bottom: 3px;
+    background: #efffff;
+    opacity: .8;
+    pointer-events: auto;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptarget .jq-vcw-dp-window
+{
+    position: absolute;
+    left: 3px;
+    right: 3px;
+    top: 3px;
+    bottom: 3px;
+    border: 1px solid gray;
+    border-top: 4px solid #008;
+    background: white;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptarget .jq-vcw-dp-window .jq-vcw-dp-target
+{
+    position: absolute;
+    background: #f7ca71;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-left .jq-vcw-dp-window .jq-vcw-dp-target
+{
+    right: 50%;
+    border-right: 1px dotted gray;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-top .jq-vcw-dp-window .jq-vcw-dp-target
+{
+    bottom: 50%;
+    border-bottom: 1px dotted gray;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-right .jq-vcw-dp-window .jq-vcw-dp-target
+{
+    left: 50%;
+    border-left: 1px dotted gray;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-droptargetcontainer.jq-vcw-dp-bottom .jq-vcw-dp-window .jq-vcw-dp-target
+{
+    top: 50%;
+    border-top: 1px dotted gray;
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptarget:hover,
+.jq-vcw-dp-maincontainer .jq-vcw-dp .jq-vcw-dp-dropcontainer .jq-vcw-dp-droptarget.jq-vcw-dp-drop-hover
+{
+    opacity: 1;
+}
+
+

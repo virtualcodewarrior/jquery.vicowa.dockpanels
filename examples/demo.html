@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Dock panel demo</title>
+        <script src="../third_party/jquery/2.1.1/jquery.js"></script>
+        <script src="../third_party/jquery/plugins/jquery.ui/1.11.1/jquery-ui.js"></script>
+        <link href="../third_party/jquery/plugins/jquery.ui/1.11.1/jquery-ui.css" type="text/css" rel="stylesheet">
+        <script src="../jquery.vicowa.dockpanels.js"></script>
+        <script src="demo.js"></script>
+        <link href="../jquery.vicowa.dockpanels.css" type="text/css" rel="stylesheet">
+        <link href="../jquery.vicowa.dockpanels.droptargets.css" type="text/css" rel="stylesheet">
+        <link href="../jquery.vicowa.dockpanels.theme.css" type="text/css" rel="stylesheet">
+        <style>
+            .red
+            {
+                background-color: red;
+            }
+            
+            .green
+            {
+                background-color: green;
+            }
+            
+            .blue
+            {
+                background-color: blue;
+            }
+            
+            .purple
+            {
+                background-color: purple;
+            }
+            
+            .cyan
+            {
+                background-color: cyan;
+            }
+            
+            .gray
+            {
+                background-color: gray;
+            }
+            
+            .row
+            {
+                display: table-row;
+            }
+        </style>
+    </head>
+    <body style="overflow: hidden">
+        <div class="maincontainer" style="position: absolute; left: 0; right: 0; bottom: 0; top: 0">
+            <div class="dockcontainer">
+                <div class="dockpanel" name="test1">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                    <div class="dockcontainer">
+                        <div class="dockpanel red" name="test2">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                        </div>
+                        <div class="dockpanel green" name="test3">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                        </div>
+                        <div class="dockpanel blue" name="test4">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                        </div>
+                        <div class="dockpanel purple" name="test5">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                        </div>
+                        <div class="dockpanel cyan" name="test6">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                        </div>
+                        <div class="dockpanel gray" name="test7">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dockcontainer">
+                <div class="dockpanel" name="test8">
+                    <div class="dockcontainer">
+ <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed fermentum est, non vehicula lorem. Curabitur posuere lorem id libero vehicula sodales. Mauris non odio consequat, commodo metus in, aliquam ligula. Ut quis lacus sit amet dui commodo porttitor. Vestibulum porttitor ultrices suscipit. Sed accumsan accumsan leo a scelerisque. Suspendisse ut ullamcorper ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+<p>Mauris vel pellentesque dui, vitae dapibus orci. Mauris tempus vulputate diam, tincidunt lobortis quam fermentum sed. Donec consequat, nibh eleifend lobortis mattis, dui nisi ultrices lectus, ac consectetur felis augue vitae sem. Quisque velit lectus, lobortis eget feugiat in, pellentesque vitae tellus. Quisque id nulla consectetur, ultricies arcu ut, tempus risus. Etiam vel rhoncus lorem. Ut condimentum diam ac turpis scelerisque, et consectetur sapien tempus. Cras maximus erat aliquam erat fermentum, id varius est blandit. Integer pulvinar congue lorem, quis egestas tortor lobortis non. Aenean malesuada mauris ac odio hendrerit, non fermentum mi blandit.</p>
+<p>Maecenas scelerisque leo sed felis vulputate pellentesque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Proin laoreet dictum leo nec venenatis. Pellentesque quis sollicitudin sapien. Etiam et diam est. Vestibulum rhoncus placerat velit, gravida luctus purus. Donec fringilla quam a ipsum faucibus pulvinar. Proin dapibus a odio sit amet sollicitudin. Phasellus at semper nisi, nec commodo libero. Sed aliquet pharetra leo eget lobortis. Maecenas pretium, lectus nec cursus rutrum, ipsum quam malesuada nulla, et vulputate mi sapien non turpis. Curabitur sed rhoncus eros.</p>
+<p>Fusce id semper risus. Aliquam rutrum laoreet metus. Quisque vel mi placerat, hendrerit justo sit amet, malesuada massa. Donec bibendum nec magna quis aliquam. Pellentesque vehicula a nulla eget tincidunt. Praesent semper mauris nunc, ut feugiat mauris mollis vulputate. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nunc vel blandit turpis, id vestibulum quam. Sed tempor egestas consequat. Suspendisse potenti. Phasellus finibus lacinia felis, non imperdiet magna scelerisque nec. Vestibulum sem mauris, mollis nec enim non, aliquet congue ligula. Etiam elementum orci nisi.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
