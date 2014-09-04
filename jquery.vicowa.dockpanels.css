@@ -24,7 +24,6 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: #ebebeb;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-left
@@ -32,7 +31,6 @@
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: green;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-top
@@ -40,7 +38,6 @@
     left: 0;
     top: 0;
     right: 0;
-    background-color: blue;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-right
@@ -48,7 +45,6 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: cyan;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-bottom
@@ -56,7 +52,6 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: magenta;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-vertical
@@ -143,18 +138,15 @@
 {
 }
 
-.jq-vcw-dp-maincontainer .jq-vcw-dp-container-handler
+.jq-vcw-dp-maincontainer > .jq-vcw-dp-container > .jq-vcw-dp-container-handler,
+.jq-vcw-dp-maincontainer .jq-vcw-dp-contentiscontainers > .jq-vcw-dp-container-handler
 {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    height: 20px;
+    display: none;
 }
 
-.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-center > .jq-vcw-dp-container-content
+.jq-vcw-dp-maincontainer .jq-vcw-dp-floatcontainer .jq-vcw-dp-contentiscontainers > .jq-vcw-dp-container-handler
 {
-    top: 0;
+    height: 20px;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-container-content
@@ -166,7 +158,8 @@
     top: 27px;
 }
 
-.jq-vcw-dp-maincontainer > .jq-vcw-dp-container > .jq-vcw-dp-container-content
+.jq-vcw-dp-maincontainer > .jq-vcw-dp-container > .jq-vcw-dp-container-content,
+.jq-vcw-dp-maincontainer > .jq-vcw-dp-container .jq-vcw-dp-contentiscontainers > .jq-vcw-dp-container-content 
 {
     top: 0px;
 }
@@ -207,3 +200,34 @@
     -o-user-select: none;
     user-select: none;    
 }
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-center > .jq-vcw-dp-container-handler::after
+{
+    content: " docked center";
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-left > .jq-vcw-dp-container-handler::after
+{
+    content: " docked left";
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-top > .jq-vcw-dp-container-handler::after
+{
+    content: " docked top";
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-right > .jq-vcw-dp-container-handler::after
+{
+    content: " docked right";
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-dock.jq-vcw-dp-bottom > .jq-vcw-dp-container-handler::after
+{
+    content: " docked bottom";
+}
+
+.jq-vcw-dp-maincontainer .jq-vcw-dp-float > .jq-vcw-dp-container-handler::after
+{
+    content: " floating";
+}
+
