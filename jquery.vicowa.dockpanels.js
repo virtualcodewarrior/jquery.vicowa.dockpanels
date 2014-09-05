@@ -200,15 +200,33 @@
                     
                     $GlobalOverlayDiv.load("../jquery.vicowa.dockpanels.droptargets.html " + Selectors.S_GLOBALDROPOVERLAY, function()
                     {
-                        $(Selectors.S_CONTAINER).on("mouseenter", function()
+                        $(Selectors.S_CONTAINER).on("mousemove", function(p_Event)
                         {
-                            $(Selectors.S_CONTAINERDROPOVERLAY).appendTo(this);
-                            $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $(this));
+                            if (!p_Event.result || !p_Event.result.hasClass(Classes.C_CONTAINER))
+                            {
+                                // find most desired target, which is the top most container with less then 2 child containers
+                                var $TargetContainer = $(this);
+                                
+                                if ($TargetContainer.parent(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length < 2)
+                                {
+                                    $TargetContainer = $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).parent(Selectors.S_CONTAINER);
+                                }
+    
+                                $(Selectors.S_CONTAINERDROPOVERLAY).appendTo($TargetContainer);
+                                $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TargetContainer);
+                            }
+                            else
+                            {
+                                $TargetContainer = p_Event.result;
+                            }
+                            
+                            return $TargetContainer;
                         });
                         
                         $GlobalOverlayDiv.find(Selectors.S_GLOBALDROPOVERLAY).appendTo($TopMostContainer).find(Selectors.S_DROPTARGET).on("mouseup", function()
                         {
                             handleDrop($(this), $(Selectors.S_DRAGGING));
+                            event.stopPropagation();
                         });
     
                         $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TopMostContainer).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
@@ -257,7 +275,7 @@
                     var $This = $(this),
                     $Target = $(p_Event.target);
                     $This.removeData("parentChanged");
-                    $(Selectors.S_CONTAINER).off("mouseenter");
+                    $(Selectors.S_CONTAINER).off("mousemove");
                     $Target.toggleClass(Classes.C_DRAGGING, false);
                     $Target.toggleClass(Classes.C_MOUSETRANSPARENT, false);
                     $Target.css({ position: "absolute" });
@@ -572,7 +590,7 @@
                     $p_TargetContainer.children().remove();
                     $p_TargetContainer.append($newContainer.children());
                     cleanupDockingClasses($newContainer);
-                    $p_TargetContainer.addClass($newContainer.attr("class"));
+                    $p_TargetContainer.addClass($newContainer.attr("class")); 
                 }
                 else
                 {
