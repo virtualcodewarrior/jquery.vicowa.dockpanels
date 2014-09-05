@@ -144,7 +144,8 @@
     display: none;
 }
 
-.jq-vcw-dp-maincontainer .jq-vcw-dp-floatcontainer .jq-vcw-dp-contentiscontainers > .jq-vcw-dp-container-handler
+.jq-vcw-dp-maincontainer .jq-vcw-dp-floatcontainer .jq-vcw-dp-contentiscontainers > .jq-vcw-dp-container-handler,
+.jq-vcw-dp-maincontainer .jq-vcw-dp-container-handler
 {
     height: 20px;
 }

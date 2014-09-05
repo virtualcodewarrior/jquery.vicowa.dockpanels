@@ -129,7 +129,7 @@
             case DockOptions.DO_TARGET_TAB:     Option = DockOptions.DO_CENTER; break;
             }
             
-            dockPanel($p_DropTarget.data("owner"), $p_DraggedItem, Option);
+            dockPanel($($p_DropTarget.data("owner")), $p_DraggedItem, Option);
         }
     }
     
@@ -213,7 +213,7 @@
                                 }
     
                                 $(Selectors.S_CONTAINERDROPOVERLAY).appendTo($TargetContainer);
-                                $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TargetContainer);
+                                $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TargetContainer[0]);
                             }
                             else
                             {
@@ -229,7 +229,7 @@
                             event.stopPropagation();
                         });
     
-                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TopMostContainer).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
+                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TopMostContainer[0]).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
                         $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_TOP, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TOP);
                         $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_LEFT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_LEFT);
                         $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_RIGHT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_RIGHT);
@@ -573,14 +573,32 @@
             if ($Children.length !== 0)        
             {
                 $newContainer.css((Orientations[p_DockOption] == Orientation.O_HORIZONTAL) ? { height: "25%" } : { width: "25%" });
+                // first check if this is the right target for this panel
 
-                // also add a center one and move the exiting content of the target container into it
-                $newCenter = dockContainer($("<div/>").append($Children), DockOptions.DO_CENTER, { x: "75%", y: "75%" }, { title : "" });
-                if ($newCenter.children(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length !== 0)
+                // find most desired target, which is the top most container with less then 2 child containers
+                var $TargetContainer = $p_TargetContainer;
+                
+                if ($TargetContainer.parent(Selectors.S_CONTAINERCONTENT).length && $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length < 2)
                 {
-                    $newCenter.addClass(Classes.C_CONTENTISCONTAINERS);
+                    // the parent of the target only contains one panel, so we can just dock this new one as a sibling of the target
+                    $TargetContainer = $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).parent(Selectors.S_CONTAINER);
+                    // get the content of this new target
+                    $TargetContainerContent = $TargetContainer.children(Selectors.S_CONTAINERCONTENT).filter(":first");
+                    // and dock the new container next to the old target
+                    addAndSplitContainers($TargetContainerContent, $p_TargetContainer, $newContainer);
+                    $TargetContainer.addClass(Classes.C_CONTENTISCONTAINERS);
                 }
-                addAndSplitContainers($TargetContainerContent, $newCenter, $newContainer);
+                else
+                {
+                    // also add a center one and move the exiting content of the target container into it
+                    $newCenter = dockContainer($("<div/>").append($Children), DockOptions.DO_CENTER, { x: "75%", y: "75%" }, { title : "" });
+                    if ($newCenter.children(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length !== 0)
+                    {
+                        $newCenter.addClass(Classes.C_CONTENTISCONTAINERS);
+                    }
+                    addAndSplitContainers($TargetContainerContent, $newCenter, $newContainer);
+                    $TargetContainer.addClass(Classes.C_CONTENTISCONTAINERS);
+                }
             }
             else
             {
