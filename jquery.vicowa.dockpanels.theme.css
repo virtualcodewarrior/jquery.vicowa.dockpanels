@@ -39,6 +39,7 @@
     font-size: .8em;
     padding: .2em 0 .2em 1em;
     text-align: left;
+    white-space: nowrap;
 }
 
 .jq-vcw-dp-maincontainer .jq-vcw-dp-container-content

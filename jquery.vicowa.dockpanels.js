@@ -53,7 +53,12 @@
         C_NOUSERSELECT:         "jq-vcw-dp-nouserselect",
         C_MOUSETRANSPARENT:     "jq-vcw-dp-mousetransparent",
         C_CONTENTISCONTAINERS:  "jq-vcw-dp-contentiscontainers",
-        C_TOPCONTAINER:         "jq-vcw-dp-topcontainer"
+        C_TOPCONTAINER:         "jq-vcw-dp-topcontainer",
+        C_TABCONTAINER:         "jq-vcw-dp-tabcontainer",
+        C_TABLISTSCROLLLEFT:    "jq-vcw-dp-tab-scroll-left",
+        C_TABLISTSCROLLRIGHT:   "jq-vcw-dp-tab-scroll-right",
+        C_TABLIST:              "jq-vcw-dp-tablist",
+        C_TABLISTCONTAINER:     "jq-vcw-dp-tablistcontainer"
     });
     
     var Selectors = Object.freeze(
@@ -73,6 +78,12 @@
         S_CENTER:               "." + Classes.C_CENTER,
         S_SPLITTER:             "." + Classes.C_SPLITTER,
         S_TOPCONTAINER:         "." + Classes.C_TOPCONTAINER,
+        S_FLOAT:                "." + Classes.C_FLOAT,
+        S_TABCONTAINER:         "." + Classes.C_TABCONTAINER,
+        C_TABLISTSCROLLLEFT:    "." + Classes.C_TABLISTSCROLLLEFT,
+        C_TABLISTSCROLLRIGHT:   "." + Classes.C_TABLISTSCROLLRIGHT,
+        C_TABLIST:              "." + Classes.C_TABLIST,
+        C_TABLISTCONTAINER:     "." + Classes.C_TABLISTCONTAINER,
         S_DROPTARGET:           ".jq-vcw-dp-droptarget"
     });
     
@@ -126,7 +137,6 @@
             case DockOptions.DO_TARGET_RIGHT:   Option = DockOptions.DO_RIGHT;  break;
             case DockOptions.DO_TARGET_BOTTOM:  Option = DockOptions.DO_BOTTOM; break;
             case DockOptions.DO_TARGET_LEFT:    Option = DockOptions.DO_LEFT ;  break;
-            case DockOptions.DO_TARGET_TAB:     Option = DockOptions.DO_CENTER; break;
             }
             
             dockPanel($($p_DropTarget.data("owner")), $p_DraggedItem, Option);
@@ -141,150 +151,12 @@
             $p_Dom.addClass(Classes.C_CONTAINER);
             p_Options = $.extend({ title: "unnamed", tabclass: null }, p_Options);
 
-            var onTargetMouseEnter = function()
-            {
-                $(this).toggleClass(Classes.C_DROPHOVER, true);
-    
-                switch($(this).data("dropside"))
-                {
-                    case DockOptions.DO_TOP:            $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TOP).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
-                    case DockOptions.DO_LEFT:           $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_LEFT).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
-                    case DockOptions.DO_RIGHT:          $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_RIGHT).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
-                    case DockOptions.DO_BOTTOM:         $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_BOTTOM).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
-                    case DockOptions.DO_TARGET_TOP:     $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TOP).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
-                    case DockOptions.DO_TARGET_LEFT:    $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_LEFT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
-                    case DockOptions.DO_TARGET_RIGHT:   $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_RIGHT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
-                    case DockOptions.DO_TARGET_BOTTOM:  $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_BOTTOM).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
-                    case DockOptions.DO_TARGET_TAB:     $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TAB).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
-                }
-            },
-            onTargetMouseLeave = function()
-            {
-                $(this).toggleClass(Classes.C_DROPHOVER, false);
-                $(this).data("drophighlight").remove();
-            };
-
             // move the current content into the content container            
             $p_Dom.children().appendTo($("<div/>").appendTo($p_Dom).addClass(Classes.C_CONTAINERCONTENT));
             // then add a drag handler
             $("<div/>").prependTo($p_Dom).addClass(Classes.C_CONTAINERHANDLER).addClass(Classes.C_NOUSERSELECT).text(p_Options.title);
 
-            $p_Dom.draggable(
-            {
-                scroll: false,
-                iframeFix: true,
-                handle: Selectors.S_CONTAINERHANDLER,
-                start: function(p_Event, p_UI)
-                {
-                    var $GlobalOverlayDiv = $("<div/>"),
-                    $ContainerOverlayDiv = $("<div/>"),
-                    $This = $(this),
-                    $TopMostContainer = $p_Dom.parents(Selectors.S_MAINCONTAINER).filter(":first").children(Selectors.S_CONTAINER).filter(":first"),
-                    $ParentContainerContent = $p_Dom.parent(Selectors.S_CONTAINERCONTENT),
-                    $FirstContainer = $ParentContainerContent.parent(Selectors.S_CONTAINER);
-    
-                    if ($FirstContainer.length === 0)
-                    {
-                         if ($p_Dom.parent(Selectors.S_CONTAINERFLOAT))  // if there is no container check if this is a floating container                    
-                        {
-                            $FirstContainer = $TopMostContainer;
-                        }
-                        else
-                        {
-                            throw "The parent of a draggable container should be either " + Classes.C_CONTAINER + " or " + Classes.C_CONTAINERFLOAT;
-                        }
-                    }
-    
-                    $This.toggleClass(Classes.C_DRAGGING, true);
-                    $This.toggleClass(Classes.C_MOUSETRANSPARENT, true);
-                    
-                    $GlobalOverlayDiv.load("../jquery.vicowa.dockpanels.droptargets.html " + Selectors.S_GLOBALDROPOVERLAY, function()
-                    {
-                        $(Selectors.S_CONTAINER).on("mousemove", function(p_Event)
-                        {
-                            if (!p_Event.result || !p_Event.result.hasClass(Classes.C_CONTAINER))
-                            {
-                                // find most desired target, which is the top most container with less then 2 child containers
-                                var $TargetContainer = $(this);
-                                
-                                if ($TargetContainer.parent(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length < 2)
-                                {
-                                    $TargetContainer = $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).parent(Selectors.S_CONTAINER);
-                                }
-    
-                                $(Selectors.S_CONTAINERDROPOVERLAY).appendTo($TargetContainer);
-                                $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TargetContainer[0]);
-                            }
-                            else
-                            {
-                                $TargetContainer = p_Event.result;
-                            }
-                            
-                            return $TargetContainer;
-                        });
-                        
-                        $GlobalOverlayDiv.find(Selectors.S_GLOBALDROPOVERLAY).appendTo($TopMostContainer).find(Selectors.S_DROPTARGET).on("mouseup", function()
-                        {
-                            handleDrop($(this), $(Selectors.S_DRAGGING));
-                            event.stopPropagation();
-                        });
-    
-                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TopMostContainer[0]).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
-                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_TOP, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TOP);
-                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_LEFT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_LEFT);
-                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_RIGHT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_RIGHT);
-                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_BOTTOM, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_BOTTOM);
-                    });
-                    $ContainerOverlayDiv.load("../jquery.vicowa.dockpanels.droptargets.html " + Selectors.S_CONTAINERDROPOVERLAY, function()
-                    {
-                        $ContainerOverlayDiv.find(Selectors.S_CONTAINERDROPOVERLAY).appendTo($FirstContainer).find(Selectors.S_DROPTARGET).on("mouseup", function()
-                        {
-                            handleDrop($(this), $(Selectors.S_DRAGGING));
-                        });
-                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $FirstContainer).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
-                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_TOP, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_TOP);
-                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_LEFT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_LEFT);
-                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_RIGHT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_RIGHT);
-                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_BOTTOM, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_BOTTOM);
-                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_CENTER, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_TAB);
-                    });
-                    
-                    var $OldParent = $This.parent();
-                    floatPanel($This);
-                    var $NewParent = $This.parent();
-                    $This.data("parentChanged", { changed: $OldParent[0] != $NewParent[0], topOffset: $OldParent.offset().top - $NewParent.offset().top, leftOffset: $OldParent.offset().left - $NewParent.offset().left });
-                },
-                drag:  function(p_Event, p_UI)
-                {
-                    var $This = $(this),
-                    ParentChanged = $This.data("parentChanged");
-    
-                    if (ParentChanged && ParentChanged.changed)
-                    {
-                        p_UI.position.top += ParentChanged.topOffset;
-                        p_UI.position.left += ParentChanged.leftOffset;
-                    }
-                    
-                    if (p_UI.position.top < 0)
-                    {
-                        p_UI.position.top = 0;
-                    }
-                },
-                stop: function(p_Event, p_UI)
-                {
-                    var $This = $(this),
-                    $Target = $(p_Event.target);
-                    $This.removeData("parentChanged");
-                    $(Selectors.S_CONTAINER).off("mousemove");
-                    $Target.toggleClass(Classes.C_DRAGGING, false);
-                    $Target.toggleClass(Classes.C_MOUSETRANSPARENT, false);
-                    $Target.css({ position: "absolute" });
-                    $(Selectors.S_GLOBALDROPOVERLAY).remove();
-                    $(Selectors.S_CONTAINERDROPOVERLAY).remove();
-                    $(Selectors.S_DROPTARGET).off("mouseenter", onTargetMouseEnter);
-                    $(Selectors.S_DROPTARGET).off("mouseleave", onTargetMouseLeave);
-                }
-            }).css({position : "absolute"});
+            attachDraggableToContainer($p_Dom);
         }
         
         return $p_Dom;
@@ -333,6 +205,303 @@
         return $p_Dom;
     }
     
+    function doDragSplitter($p_Splitter, p_Position, p_UserTriggered, p_Margins)
+    {
+        var $Siblings = $p_Splitter.siblings(),
+        $FirstItem = null,
+        $SecondItem = null,
+        Or = $p_Splitter.hasClass(Orientation.O_VERTICAL) ? Orientation.O_VERTICAL : Orientation.O_HORIZONTAL;
+
+        if ($Siblings.length !== 2)
+        {
+            throw "A splitter should have two siblings but this one has " + $Siblings.length;
+        }
+        
+        $FirstItem = $Siblings.filter(":first");
+        $SecondItem = $Siblings.filter(":last");
+        
+        if (Or === Orientation.O_VERTICAL)
+        {
+            // make sure the first item is on the left
+            if ($FirstItem.attr("dock") === DockOptions.DO_RIGHT || $SecondItem.attr("dock") === DockOptions.DO_LEFT)
+            {
+                swap($FirstItem, $SecondItem);
+            }
+
+            if (p_UserTriggered || $FirstItem.attr("dock") === DockOptions.DO_LEFT || $SecondItem.attr("dock") !== DockOptions.DO_RIGHT)
+            {
+                p_Position.left = Math.max(p_Margins.left, Math.min($p_Splitter.parent().innerWidth() - $p_Splitter.outerWidth() - p_Margins.right, p_Position.left));
+            }
+            else
+            {
+                // if we have a right docked item we want the right distance to stay the same
+                p_Position.left = Math.max(p_Margins.left, Math.min($p_Splitter.parent().innerWidth() - $p_Splitter.outerWidth() - p_Margins.right, $p_Splitter.parent().innerWidth() - ((($SecondItem.data("width")) ? $SecondItem.data("width") : $SecondItem.outerWidth()) + $p_Splitter.outerWidth())));
+            }
+
+            $FirstItem.css({ width: p_Position.left });
+            $SecondItem.css({ left: p_Position.left + $p_Splitter.outerWidth() });
+            
+            if (p_UserTriggered)
+            {
+                if ($FirstItem.attr("dock") !== DockOptions.DO_CENTER)
+                {
+                    $FirstItem.data("width", p_Position.left);
+                }
+                else
+                {
+                    $FirstItem.removeData("width");
+                }
+                if ($SecondItem.attr("dock") !== DockOptions.DO_CENTER)
+                {
+                    $SecondItem.data("width", $p_Splitter.parent().innerWidth() - (p_Position.left + $p_Splitter.outerWidth()));
+                }
+                else
+                {
+                    $SecondItem.removeData("width");
+                }
+            }
+        }
+        else
+        {
+            // make sure the first item is on the top
+            if ($FirstItem.attr("dock") === DockOptions.DO_BOTTOM || $SecondItem.attr("dock") === DockOptions.DO_TOP)
+            {
+                swap($FirstItem, $SecondItem);
+            }
+
+            if (p_UserTriggered || $FirstItem.attr("dock") === DockOptions.DO_TOP || $SecondItem.attr("dock") !== DockOptions.DO_BOTTOM)
+            {
+                p_Position.top = Math.max(p_Margins.top, Math.min($p_Splitter.parent().innerHeight() - $p_Splitter.outerHeight() - p_Margins.bottom, p_Position.top));
+            }
+            else
+            {
+                // if we have a bottom docked item we want the bottom distance to stay the same
+                p_Position.top = Math.max(p_Margins.top, Math.min($p_Splitter.parent().innerHeight() - $p_Splitter.outerHeight() - p_Margins.bottom, $p_Splitter.parent().innerHeight() - ((($SecondItem.data("height")) ? $SecondItem.data("height") : $SecondItem.outerHeight()) + $p_Splitter.outerHeight())));
+            }
+            $FirstItem.css({ height: p_Position.top });
+            $SecondItem.css({ top: p_Position.top + $p_Splitter.outerHeight() });
+
+            if (p_UserTriggered)
+            {
+                if ($FirstItem.attr("dock") !== DockOptions.DO_CENTER)
+                {
+                    $FirstItem.data("height", p_Position.top);
+                }
+                else
+                {
+                    $FirstItem.removeData("height");
+                }
+                if ($SecondItem.attr("dock") !== DockOptions.DO_CENTER)
+                {
+                    $SecondItem.data("height", $p_Splitter.parent().innerHeight() - (p_Position.top + $p_Splitter.outerHeight()));
+                }
+                else
+                {
+                    $SecondItem.removeData("height");
+                }
+            }
+        }
+
+        $Siblings.find(Selectors.S_SPLITTER).each(function()
+        {
+            var $This = $(this),
+            Position = $This.position();
+            
+            doDragSplitter($This, Position, false, { top: 10, left: 10, right: 10, bottom: 10 });
+            $This.css(Position);
+        });
+    }
+
+    function triggerSplitters($p_ParentDom)
+    {
+        //handle sibling splitters
+        $p_ParentDom.find(Selectors.S_SPLITTER).each(function()
+        {
+            var $This =$(this),
+            Position = $This.position();
+            
+            doDragSplitter($This, Position, false, { top: 10, left: 10, right: 10, bottom: 10 });
+            $This.css(Position);
+        });
+    }
+    
+    function attachDraggableToSplitter($p_Splitter)
+    {
+        if (!$p_Splitter.draggable("instance"))
+        {
+            var Or = ($p_Splitter.hasClass(Orientation.O_VERTICAL)) ? Orientation.O_VERTICAL : Orientation.O_HORIZONTAL;
+        
+            $p_Splitter.draggable
+            (
+                {
+                    iframeFix: true,
+                    axis: (Or === Orientation.O_VERTICAL) ? "x" : "y",
+                    drag: function(p_Event, p_UI){ doDragSplitter($p_Splitter, p_UI.position, true, { top: 10, left: 10, right: 10, bottom: 10}); },
+                }
+            );
+        }
+    }
+    
+    function ensureSplittersDraggable()
+    {
+        $(Selectors.S_SPLITTER).each(function()
+        {
+            attachDraggableToSplitter($(this));
+        });
+    }
+    
+    function attachDraggableToContainer($p_Container)
+    {
+        if (!$p_Container.draggable("instance"))
+        {
+            var onTargetMouseEnter = function()
+            {
+                $(this).toggleClass(Classes.C_DROPHOVER, true);
+    
+                switch($(this).data("dropside"))
+                {
+                    case DockOptions.DO_TOP:            $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TOP).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
+                    case DockOptions.DO_LEFT:           $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_LEFT).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
+                    case DockOptions.DO_RIGHT:          $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_RIGHT).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
+                    case DockOptions.DO_BOTTOM:         $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_BOTTOM).prependTo($(this).parents(Selectors.S_GLOBALDROPOVERLAY))); break;
+                    case DockOptions.DO_TARGET_TOP:     $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TOP).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
+                    case DockOptions.DO_TARGET_LEFT:    $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_LEFT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
+                    case DockOptions.DO_TARGET_RIGHT:   $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_RIGHT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
+                    case DockOptions.DO_TARGET_BOTTOM:  $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_BOTTOM).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
+                    case DockOptions.DO_TARGET_TAB:     $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TAB).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
+                }
+            },
+            onTargetMouseLeave = function()
+            {
+                $(this).toggleClass(Classes.C_DROPHOVER, false);
+                $(this).data("drophighlight").remove();
+            };
+
+            $p_Container.draggable(
+            {
+                scroll: false,
+                iframeFix: true,
+                handle: Selectors.S_CONTAINERHANDLER,
+                start: function(p_Event, p_UI)
+                {
+                    var $GlobalOverlayDiv = $("<div/>"),
+                    $ContainerOverlayDiv = $("<div/>"),
+                    $This = $(this),
+                    $TopMostContainer = $p_Container.parents(Selectors.S_MAINCONTAINER).filter(":first").children(Selectors.S_CONTAINER).filter(":first"),
+                    $ParentContainerContent = $p_Container.parent(Selectors.S_CONTAINERCONTENT),
+                    $FirstContainer = $ParentContainerContent.parent(Selectors.S_CONTAINER);
+    
+                    if ($FirstContainer.length === 0)
+                    {
+                         if ($p_Container.parent(Selectors.S_CONTAINERFLOAT))  // if there is no container check if this is a floating container                    
+                        {
+                            $FirstContainer = $TopMostContainer;
+                        }
+                        else
+                        {
+                            throw "The parent of a draggable container should be either " + Classes.C_CONTAINER + " or " + Classes.C_CONTAINERFLOAT;
+                        }
+                    }
+    
+                    $This.toggleClass(Classes.C_DRAGGING, true);
+                    $This.toggleClass(Classes.C_MOUSETRANSPARENT, true);
+                    
+                    $GlobalOverlayDiv.load("../jquery.vicowa.dockpanels.droptargets.html " + Selectors.S_GLOBALDROPOVERLAY, function()
+                    {
+                        $(Selectors.S_CONTAINER).on("mousemove", function(p_Event)
+                        {
+                            // find most desired target, which is the top most container with less then 2 child containers
+                            var $TargetContainer = $(p_Event.target);
+                            
+                            if (!$TargetContainer.hasClass(Classes.C_CONTAINER))
+                            {
+                                $TargetContainer = $TargetContainer.parents(Selectors.S_CONTAINER).filter(":first");
+                            }
+
+                            if ($TargetContainer.parent(Selectors.S_CONTAINERCONTENT).length && $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length < 2)
+                            {
+                                $TargetContainer = $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).parent(Selectors.S_CONTAINER);
+                            }
+
+                            $(Selectors.S_CONTAINERDROPOVERLAY).appendTo($TargetContainer);
+                            $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TargetContainer[0]);
+                        });
+                        
+                        $GlobalOverlayDiv.find(Selectors.S_GLOBALDROPOVERLAY).appendTo($TopMostContainer).find(Selectors.S_DROPTARGET).on("mouseup", function()
+                        {
+                            handleDrop($(this), $(Selectors.S_DRAGGING));
+                            event.stopPropagation();
+                        });
+    
+                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $TopMostContainer[0]).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
+                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_TOP, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TOP);
+                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_LEFT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_LEFT);
+                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_RIGHT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_RIGHT);
+                        $([Selectors.S_GLOBALDROPOVERLAY, Selectors.S_BOTTOM, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_BOTTOM);
+                    });
+                    $ContainerOverlayDiv.load("../jquery.vicowa.dockpanels.droptargets.html " + Selectors.S_CONTAINERDROPOVERLAY, function()
+                    {
+                        $ContainerOverlayDiv.find(Selectors.S_CONTAINERDROPOVERLAY).appendTo($FirstContainer).find(Selectors.S_DROPTARGET).on("mouseup", function()
+                        {
+                            handleDrop($(this), $(Selectors.S_DRAGGING));
+                        });
+                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_DROPTARGET].join(" ")).data("owner", $FirstContainer).on("mouseenter", onTargetMouseEnter).on("mouseleave", onTargetMouseLeave);
+                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_TOP, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_TOP);
+                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_LEFT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_LEFT);
+                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_RIGHT, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_RIGHT);
+                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_BOTTOM, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_BOTTOM);
+                        $([Selectors.S_CONTAINERDROPOVERLAY, Selectors.S_CENTER, Selectors.S_DROPTARGET].join(" ")).data("dropside", DockOptions.DO_TARGET_TAB);
+                    });
+                    
+                    var $OldParent = $This.parent(),
+                    OldOffset = $OldParent.offset();
+                    floatPanel($This);
+                    var $NewParent = $This.parent();
+                    $This.data("parentChanged", { changed: $OldParent[0] != $NewParent[0], topOffset: OldOffset.top - $NewParent.offset().top, leftOffset: OldOffset.left - $NewParent.offset().left + $This.outerWidth() * 0.05 });
+                },
+                drag:  function(p_Event, p_UI)
+                {
+                    var $This = $(this),
+                    ParentChanged = $This.data("parentChanged");
+    
+                    if (ParentChanged && ParentChanged.changed)
+                    {
+                        p_UI.position.top += ParentChanged.topOffset;
+                        p_UI.position.left += ParentChanged.leftOffset;
+                    }
+                    
+                    if (p_UI.position.top < 0)
+                    {
+                        p_UI.position.top = 0;
+                    }
+                },
+                stop: function(p_Event, p_UI)
+                {
+                    var $This = $(this),
+                    $Target = $(p_Event.target);
+                    $This.removeData("parentChanged");
+                    $(Selectors.S_CONTAINER).off("mousemove");
+                    $Target.toggleClass(Classes.C_DRAGGING, false);
+                    $Target.toggleClass(Classes.C_MOUSETRANSPARENT, false);
+                    $Target.css({ position: "absolute" });
+                    $(Selectors.S_GLOBALDROPOVERLAY).remove();
+                    $(Selectors.S_CONTAINERDROPOVERLAY).remove();
+                    $(Selectors.S_DROPTARGET).off("mouseenter", onTargetMouseEnter);
+                    $(Selectors.S_DROPTARGET).off("mouseleave", onTargetMouseLeave);
+                    ensureFloatsResizable();
+                }
+            }).css({position : "absolute"});
+        }
+    }
+    
+    function ensureContainersDraggable()
+    {
+        $(Selectors.S_CONTAINER).each(function()
+        {
+            attachDraggableToContainer($(this));
+        });
+    }
+    
     function addAndSplitContainers($p_Parent, $p_Center, $p_DockedContainer)
     {
         var Or = null,
@@ -347,50 +516,8 @@
         }
 
         // create the splitter and set its orientation                        
-        $Splitter = $("<div/>").draggable
-        (
-            {
-                iframeFix: true,
-                axis: (Or === Orientation.O_VERTICAL) ? "x" : "y",
-                drag: function(p_Event, p_UI)
-                {
-                    var $Siblings = $(this).siblings(),
-                    $FirstItem = null,
-                    $SecondItem = null;
-
-                    if ($Siblings.length !== 2)
-                    {
-                        throw "A splitter should have two siblings but this one has " + $Siblings.length;
-                    }
-                    
-                    $FirstItem = $Siblings.filter(":first");
-                    $SecondItem = $Siblings.filter(":last");
-                    
-                    if (Or === Orientation.O_VERTICAL)
-                    {
-                        if ($FirstItem.attr("dock") === "right" || $SecondItem.attr("dock") === "left")
-                        {
-                            swap($FirstItem, $SecondItem);
-                        }
-                        
-                        p_UI.position.left = Math.max(10, Math.min($Splitter.parent().innerWidth() - $Splitter.outerWidth() - 10, p_UI.position.left));
-                        $FirstItem.css({ width: p_UI.position.left });
-                        $SecondItem.css({ left: p_UI.position.left + $Splitter.outerWidth() });
-                    }
-                    else
-                    {
-                        if ($FirstItem.attr("dock") === "bottom" || $SecondItem.attr("dock") === "top")
-                        {
-                            swap($FirstItem, $SecondItem);
-                        }
-
-                        p_UI.position.top = Math.max(10, Math.min($Splitter.parent().innerHeight() - $Splitter.outerHeight() - 10, p_UI.position.top));
-                        $FirstItem.css({ height: p_UI.position.top });
-                        $SecondItem.css({ top: p_UI.position.top + $Splitter.outerHeight() });
-                    }
-                }
-            }
-        ).addClass(Classes.C_SPLITTER).addClass(Or);
+        $Splitter = $("<div/>").addClass(Classes.C_SPLITTER).addClass(Or);
+        attachDraggableToSplitter($Splitter);
 
         // reorganize so left and top items are before center and right and bottom items are after center        
         switch ($p_DockedContainer.attr("dock"))
@@ -447,6 +574,22 @@
         }
     }
     
+    function ensureFloatsResizable()
+    {
+        $(Selectors.S_FLOAT).each(function()
+        {
+            var $This = $(this);
+            // first remove resizable if any
+            if ($This.resizable("instance"))
+            {
+                $This.resizable("destroy");
+            }
+            
+            // then reapply
+            makeResizable($This);    
+        });
+    }
+    
     function floatPanel($p_Container)
     {
         if ($p_Container.hasClass(Classes.C_CONTAINER))
@@ -459,13 +602,14 @@
                 // get the height width etc
                 // the parent is about to change so we have to get the screen x and y and 
                 // calculate them back to x and y relative to the new container
+                // shrink the new panel by 5 % in each direction to show it is no longer docked
                 var NewStyle = 
                 {
-                    top: $p_Container.offset().top - $FloatParent.offset().top,
-                    left: $p_Container.offset().left - $FloatParent.offset().left,
+                    top: $p_Container.offset().top - $FloatParent.offset().top + $p_Container.height() * 0.05,
+                    left: $p_Container.offset().left - $FloatParent.offset().left + $p_Container.width() * 0.05,
                     position: "absolute",
-                    width: $p_Container.width(),
-                    height: $p_Container.height()
+                    width: Math.max(10, $p_Container.width() - $p_Container.width() * 0.1),
+                    height: Math.max(10, $p_Container.height() - $p_Container.height() * 0.1)
                 };
                 
                 $p_Container.removeAttr("style");
@@ -514,14 +658,21 @@
                                         $ContainerParent.append($ContainerContent);
                                         // and then we remove the container
                                         $ChildContainer.remove();
+                                        
+                                        // then we have to reattach the draggable handlers
+                                        ensureContainersDraggable();
                                     }
                                     else
                                     {
                                         throw "Expected a container here";
                                     }
                                 });
-                                // after this there should be no containers left so remove the Classes.C_CONTENTISCONTAINERS flag
-                                $ContainerParent.removeClass(Classes.C_CONTENTISCONTAINERS);
+                                
+                                // if after this there are no containers left then remove the Classes.C_CONTENTISCONTAINERS flag
+                                if ($ContainerParent.children(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length === 0)
+                                {
+                                    $ContainerParent.removeClass(Classes.C_CONTENTISCONTAINERS);
+                                }
                             }
                             else 
                             {
@@ -549,6 +700,35 @@
         {
             makeResizable(dockContainer($p_Container || $("<div/>"), DockOptions.DO_FLOAT, { x: $p_Container.outerWidth(), y: $p_Container.outerHeight() }).appendTo($p_Container.parents(Selectors.S_MAINCONTAINER).children(Selectors.S_CONTAINERFLOAT).first()));
         }
+    }
+    
+    function addAsTab($p_TabContainer, $p_Container)
+    {
+        $p_TabContainer.addClass(Classes.C_TABCONTAINER);
+
+        var $TabList = $p_TabContainer.children(Selectors.S_TABLISTCONTAINER).children(Selectors.S_TABLIST).filter(":first");
+        
+        if ($TabList.length === 0)
+        {
+            $TabList = $("<div/>").addClass(Classes.C_TABLIST);
+            $("<div/>").addClass(Classes.C_TABLISTCONTAINER).appendTo($p_TabContainer).append($("<div/>").addClass(Classes.C_TABLISTSCROLLLEFT)).append($TabList).append($("<div/>").addClass(Classes.C_TABLISTSCROLLRIGHT));
+        }
+        
+        
+    }
+    
+    function dockAsTab($p_TargetContainer, $p_Container)
+    {
+        var $TargetContainerContent = $p_TargetContainer.children(Selectors.S_CONTAINERCONTENT).filter(":first"),
+        $newContainer = dockContainer($p_Container || $("<div/>"), DockOptions.DO_CENTER, {}),
+        $Children = $TargetContainerContent.children().not($p_Container);
+        
+        if ($Children.length !== 0)
+        {
+            
+        }
+        
+        addAsTab($TargetContainerContent, $p_Container);
     }
     
     function dockPanel($p_TargetContainer, $p_Container, p_DockOption, p_Options)
@@ -618,10 +798,18 @@
                 }
             }
         }
+        else if (p_DockOption === DockOptions.DO_TARGET_TAB)
+        {
+            dockAsTab($p_TargetContainer, $p_Container);
+        }
         else
         {
             throw "Invalid dock option for dockPanel " + p_DockOption;
         }
+        
+        ensureSplittersDraggable();
+        triggerSplitters(($p_TargetContainer.hasClass(Classes.C_TOPCONTAINER)) ? $p_TargetContainer : $p_TargetContainer.parents(Selectors.C_TOPCONTAINER));
+        ensureContainersDraggable();
     }
 
     $.fn.maincontainer = function(p_Options)
@@ -654,7 +842,7 @@
         
         this.each(function()
         {
-            var $This = $(this);
+            var $This = $("<div/>").appendTo($(this).parent()).append(this);
             
             switch (p_Options.dockstate)
             {
