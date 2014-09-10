@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="third_party/jquery/2.1.1/jquery.js"></script>
+        <link href="jquery.vicowa.dockpanels.css" type="text/css" rel="stylesheet"></link>
+        <link href="jquery.vicowa.dockpanels.tabstyle.css" type="text/css" rel="stylesheet"></link>
+        <style>
+            .jq-vcw-dp-tabcontainer
+            {
+                position: relative;
+            }
+            
+            .jq-vcw-dp-tabcontainer .jq-vcw-dp-tabstop,
+            .jq-vcw-dp-tabcontainer .jq-vcw-dp-tabsbottom
+            {
+                width: 20em;
+                height: 1.5em;
+            }
+
+            .jq-vcw-dp-tabcontainer .jq-vcw-dp-tabsleft,
+            .jq-vcw-dp-tabcontainer .jq-vcw-dp-tabsright
+            {
+                height: 25em;
+                width: 1.5em;
+            }
+        </style>
+        <script>
+            // for testing purpose only
+            $("document").ready(function()
+            {
+                // test tabs in this document
+                var $Tab = $(".jq-vcw-dp-tab"),
+                Count = 1;
+                $(".jq-vcw-dp-tablist").append($Tab.clone()).append($Tab.clone()).append($Tab.clone()).append($Tab.clone());
+                $(".jq-vcw-dp-tabtext").each(function()
+                {
+                    $(this).text("tab " + Count++);
+                });
+                $(".jq-vcw-dp-tab").on("click", function()
+                {
+                    $(".jq-vcw-dp-tab").removeClass("jq-vcw-dp-active");
+                    $(this).toggleClass("jq-vcw-dp-active"); 
+                });
+            });
+        </script>
+    </head>
+    <body class="jq-vcw-dp-maincontainer" style="background-color: #def">
+        <div style="display: none">
+        <!-- the actual tab definition -->
+        <li class="jq-vcw-dp-tab">
+            <span class="jq-vcw-dp-tabicon"><div></div></span>
+            <span class="jq-vcw-dp-tabtext"></span>
+            <span class="jq-vcw-dp-tab-button"><div>x</div></span>
+        </li>
+        </div>
+
+        <!-- this part is for testing the tab look and feel in different situations -->        
+        <div class="jq-vcw-dp-tabcontainer">
+            <div class="jq-vcw-dp-tabstop">
+                <div class="jq-vcw-dp-tablistcontainer">
+                    <div class="jq-vcw-dp-tabscrollcontainer">
+                        <ul class="jq-vcw-dp-tablist">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jq-vcw-dp-tabcontainer">
+            <div class="jq-vcw-dp-tabsleft">
+                <div class="jq-vcw-dp-tablistcontainer">
+                    <div class="jq-vcw-dp-tabscrollcontainer">
+                        <ul class="jq-vcw-dp-tablist">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jq-vcw-dp-tabcontainer">
+            <div class="jq-vcw-dp-tabsright">
+                <div class="jq-vcw-dp-tablistcontainer">
+                    <div class="jq-vcw-dp-tabscrollcontainer">
+                        <ul class="jq-vcw-dp-tablist">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="jq-vcw-dp-tabcontainer">
+            <div class="jq-vcw-dp-tabsbottom">
+                <div class="jq-vcw-dp-tablistcontainer">
+                    <div class="jq-vcw-dp-tabscrollcontainer">
+                        <ul class="jq-vcw-dp-tablist">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>

@@ -44,6 +44,7 @@
         C_BOTTOM:               "jq-vcw-dp-bottom",
         C_CENTER:               "jq-vcw-dp-center",
         C_TAB:                  "jq-vcw-dp-tab",
+        C_TABHIGHLIGHT:         "jq-vcw-dp-tabhighlight",
         C_CONTAINERDROPOVERLAY: "jq-vcw-dp-containerdropoverlay",
         C_GLOBALDROPOVERLAY:    "jq-vcw-dp-globaldropoverlay",
         C_DROPHOVER:            "jq-vcw-dp-drop-hover",
@@ -55,10 +56,18 @@
         C_CONTENTISCONTAINERS:  "jq-vcw-dp-contentiscontainers",
         C_TOPCONTAINER:         "jq-vcw-dp-topcontainer",
         C_TABCONTAINER:         "jq-vcw-dp-tabcontainer",
-        C_TABLISTSCROLLLEFT:    "jq-vcw-dp-tab-scroll-left",
-        C_TABLISTSCROLLRIGHT:   "jq-vcw-dp-tab-scroll-right",
+        C_TABLISTSCROLLBEGIN:   "jq-vcw-dp-tab-scroll-begin",
+        C_TABLISTSCROLLEND:     "jq-vcw-dp-tab-scroll-end",
         C_TABLIST:              "jq-vcw-dp-tablist",
-        C_TABLISTCONTAINER:     "jq-vcw-dp-tablistcontainer"
+        C_TABLEFT:              "jq-vcw-dp-tabsleft",
+        C_TABRIGHT:             "jq-vcw-dp-tabsright",
+        C_TABTOP:               "jq-vcw-dp-tabstop",
+        C_TABBOTTOM:            "jq-vcw-dp-tabsbottom",
+        C_TABLISTCONTAINER:     "jq-vcw-dp-tablistcontainer",
+        C_TABCONTENT:           "jq-vcw-dp-tabcontent",
+        C_ACTIVE:               "jq-vcw-dp-active",
+        C_TABTEXT:              "jq-vcw-dp-tabtext",
+        C_TABSCROLLCONTAINER:   "jq-vcw-dp-tabscrollcontainer"
     });
     
     var Selectors = Object.freeze(
@@ -80,10 +89,14 @@
         S_TOPCONTAINER:         "." + Classes.C_TOPCONTAINER,
         S_FLOAT:                "." + Classes.C_FLOAT,
         S_TABCONTAINER:         "." + Classes.C_TABCONTAINER,
-        C_TABLISTSCROLLLEFT:    "." + Classes.C_TABLISTSCROLLLEFT,
-        C_TABLISTSCROLLRIGHT:   "." + Classes.C_TABLISTSCROLLRIGHT,
-        C_TABLIST:              "." + Classes.C_TABLIST,
-        C_TABLISTCONTAINER:     "." + Classes.C_TABLISTCONTAINER,
+        S_TABLISTSCROLLBEGIN:   "." + Classes.C_TABLISTSCROLLBEGIN,
+        S_TABLISTSCROLLEND:     "." + Classes.C_TABLISTSCROLLEND,
+        S_TABLIST:              "." + Classes.C_TABLIST,
+        S_TABLISTCONTAINER:     "." + Classes.C_TABLISTCONTAINER,
+        S_TABCONTENT:           "." + Classes.C_TABCONTENT,
+        S_ACTIVE:               "." + Classes.C_ACTIVE,
+        S_TAB:                  "." + Classes.C_TAB,
+        S_TABTEXT:              "." + Classes.C_TABTEXT,
         S_DROPTARGET:           ".jq-vcw-dp-droptarget"
     });
     
@@ -100,6 +113,13 @@
         DO_TARGET_BOTTOM:   "targetbottom",
         DO_TARGET_LEFT:     "targetleft",
         DO_TARGET_TAB:      "targettab"       
+    });
+    var TabOptions = Object.freeze(
+    {
+        TO_TOP:     "top",    
+        TO_LEFT:    "left",     
+        TO_BOTTOM:  "bottom",
+        TO_RIGHT:   "right"
     });
     var Orientation = Object.freeze(
     {
@@ -166,6 +186,7 @@
     {
         cleanupDockingClasses($p_Dom);
         $p_Dom.removeAttr("style");
+        $p_Dom.removeAttr("dock");
         if ($p_Dom.resizable("instance"))
         {
             $p_Dom.resizable("destroy");
@@ -368,7 +389,7 @@
                     case DockOptions.DO_TARGET_LEFT:    $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_LEFT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
                     case DockOptions.DO_TARGET_RIGHT:   $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_RIGHT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
                     case DockOptions.DO_TARGET_BOTTOM:  $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_BOTTOM).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
-                    case DockOptions.DO_TARGET_TAB:     $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TAB).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
+                    case DockOptions.DO_TARGET_TAB:     $(this).data("drophighlight", $("<div/>").addClass(Classes.C_DROPHIGHLIGHT).addClass(Classes.C_TABHIGHLIGHT).prependTo($(this).parents(Selectors.S_CONTAINERDROPOVERLAY))); break;
                 }
             },
             onTargetMouseLeave = function()
@@ -702,33 +723,108 @@
         }
     }
     
-    function addAsTab($p_TabContainer, $p_Container)
+    function addAsTab($p_TabContainer, $p_Container, $p_Tab)
     {
-        $p_TabContainer.addClass(Classes.C_TABCONTAINER);
+        resetDocking($p_Container);
+        var Options = { location: TabOptions.TO_TOP };
+        $p_TabContainer.parents(Selectors.S_CONTAINER).filter(":first").addClass(Classes.C_TABCONTAINER);
 
-        var $TabList = $p_TabContainer.children(Selectors.S_TABLISTCONTAINER).children(Selectors.S_TABLIST).filter(":first");
+        var $TabList = $p_TabContainer.children(Selectors.S_TABLISTCONTAINER).find(Selectors.S_TABLIST).filter(":first"),
+        $TabContents = $p_TabContainer.children(Selectors.S_TABCONTENT).filter(":first");
         
         if ($TabList.length === 0)
         {
-            $TabList = $("<div/>").addClass(Classes.C_TABLIST);
-            $("<div/>").addClass(Classes.C_TABLISTCONTAINER).appendTo($p_TabContainer).append($("<div/>").addClass(Classes.C_TABLISTSCROLLLEFT)).append($TabList).append($("<div/>").addClass(Classes.C_TABLISTSCROLLRIGHT));
+            $TabList = $("<ul/>").addClass(Classes.C_TABLIST);
+            $("<div/>").addClass(Classes.C_TABLISTCONTAINER).appendTo($p_TabContainer).append($("<div/>").addClass(Classes.C_TABLISTSCROLLBEGIN)).append($("<div/>").append($TabList).addClass(Classes.C_TABSCROLLCONTAINER)).append($("<div/>").addClass(Classes.C_TABLISTSCROLLEND));
+            $TabContents = $("<div/>").addClass(Classes.C_TABCONTENT).appendTo($p_TabContainer);
+
+            $p_TabContainer.removeClass([Classes.C_TABSLEFT, Classes.C_TABSTOP, Classes.C_TABSBOTTOM, Classes.C_TABSRIGHT].join(" "));
+            
+            switch (Options.location)
+            {
+                case TabOptions.TO_TOP:     $p_TabContainer.addClass(Classes.C_TABTOP);    break;
+                case TabOptions.TO_LEFT:    $p_TabContainer.addClass(Classes.C_TABLEFT);   break;
+                case TabOptions.TO_RIGHT:   $p_TabContainer.addClass(Classes.C_TABRIGHT);  break;
+                case TabOptions.TO_BOTTOM:  $p_TabContainer.addClass(Classes.C_TABBOTTOM); break;
+            }
         }
+        var HasContainer = false;
+        $TabList.children(Selectors.S_TAB).each(function()
+        {
+            if ($(this).data("container") === $p_Container[0])
+            {
+                HasContainer = true;
+            }
+        });
         
-        
+        if (!HasContainer)
+        {
+            // load tab from our tab definition file, this will allow for customizing tabs later on
+            $p_Tab.appendTo($TabList).data("container", $p_Container[0]).on("click", function()
+            {
+                $p_TabContainer.find(Selectors.S_ACTIVE).toggleClass(Classes.C_ACTIVE, false);
+
+                $(this).toggleClass(Classes.C_ACTIVE, true);
+                $($(this).data("container")).toggleClass(Classes.C_ACTIVE, true);
+            });
+            $p_Tab.find(Selectors.S_TABTEXT).text("tab");
+            $TabContents.append($p_Container);
+            $p_Tab.trigger("click");
+        }
     }
     
-    function dockAsTab($p_TargetContainer, $p_Container)
+    function dockAsTab($p_TargetContainer, $p_Container, p_Options)
     {
-        var $TargetContainerContent = $p_TargetContainer.children(Selectors.S_CONTAINERCONTENT).filter(":first"),
-        $newContainer = dockContainer($p_Container || $("<div/>"), DockOptions.DO_CENTER, {}),
-        $Children = $TargetContainerContent.children().not($p_Container);
-        
-        if ($Children.length !== 0)
+        if ($p_TargetContainer.parents(Selectors.S_TABCONTAINER).length !== 0)
         {
-            
+            $p_TargetContainer = $p_TargetContainer.parents(Selectors.S_TABCONTAINER).filter(":first");
+        }
+        var $TargetContainerContent = $p_TargetContainer.children(Selectors.S_CONTAINERCONTENT).filter(":first"),
+        $Children = $TargetContainerContent.children().not($p_Container),
+        Queue = [],
+        Tab = $p_TargetContainer.data("tabtemplate");
+        
+        p_Options = $.extend({ tabtemplate: "../jquery.vicowa.dockpanels.tabs.html" }, p_Options);
+
+        if ($Children.filter(Selectors.S_CONTAINER).length === 0 && $Children.filter(Selectors.S_TABCONTENT).length === 0)
+        {
+            dockContainer($("<div/>"), DockOptions.DO_CENTER, {}).appendTo($TargetContainerContent).children(Selectors.S_CONTAINERCONTENT).filter(":first").append($Children);
+        }
+
+        if (!$p_TargetContainer.hasClass(Classes.C_TABCONTAINER))
+        {
+            $TargetContainerContent.children().not($p_Container).each(function()
+            {
+                Queue.push($(this)); 
+            });
         }
         
-        addAsTab($TargetContainerContent, $p_Container);
+        Queue.push($p_Container)
+
+        if (!Tab)
+        {
+            var $LoadTarget = $("<div/>").load(p_Options.tabtemplate + " " + Selectors.S_TAB, function()
+            {
+                var $Tab = $LoadTarget.find(Selectors.S_TAB);
+                if ($Tab.length)
+                {
+                    $p_TargetContainer.data("tabtemplate", $Tab[0]);
+                    while (Queue.length)
+                    {
+                        addAsTab($TargetContainerContent, Queue[0], $Tab.clone());
+                        Queue.splice(0, 1);
+                    }
+                }
+            });
+        }
+        else
+        {
+            while (Queue.length)
+            {
+                addAsTab($TargetContainerContent, Queue[0], $(Tab).clone());
+                Queue.splice(0, 1);
+            }
+        }
     }
     
     function dockPanel($p_TargetContainer, $p_Container, p_DockOption, p_Options)
