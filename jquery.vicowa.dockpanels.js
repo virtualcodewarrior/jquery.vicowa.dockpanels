@@ -27,47 +27,51 @@
 }(function($)
 {
     'use strict';
+    
+    var Constants = Object.freeze({ Prefix: "jq-vcw-dp-" });
+    
     var Classes = Object.freeze(
     {
-        C_MAINCONTAINER:        "jq-vcw-dp-maincontainer",
-        C_CONTAINER:            "jq-vcw-dp-container",
-        C_CONTAINERCONTENT:     "jq-vcw-dp-container-content",
-        C_CONTAINERHANDLER:     "jq-vcw-dp-container-handler",
-        C_CONTAINERFLOAT:       "jq-vcw-dp-floatcontainer",
-        C_DOCK:                 "jq-vcw-dp-dock",
-        C_VERTICAL:             "jq-vcw-dp-vertical",
-        C_HORIZONTAL:           "jq-vcw-dp-horizontal",
-        C_DROPHIGHLIGHT:        "jq-vcw-dp-drop-highlight",
-        C_LEFT:                 "jq-vcw-dp-left",
-        C_RIGHT:                "jq-vcw-dp-right",
-        C_TOP:                  "jq-vcw-dp-top",
-        C_BOTTOM:               "jq-vcw-dp-bottom",
-        C_CENTER:               "jq-vcw-dp-center",
-        C_TAB:                  "jq-vcw-dp-tab",
-        C_TABHIGHLIGHT:         "jq-vcw-dp-tabhighlight",
-        C_CONTAINERDROPOVERLAY: "jq-vcw-dp-containerdropoverlay",
-        C_GLOBALDROPOVERLAY:    "jq-vcw-dp-globaldropoverlay",
-        C_DROPHOVER:            "jq-vcw-dp-drop-hover",
-        C_FLOAT:                "jq-vcw-dp-float",
-        C_DRAGGING:             "jq-vcw-dp-dragging",
-        C_SPLITTER:             "jq-vcw-dp-splitter",
-        C_NOUSERSELECT:         "jq-vcw-dp-nouserselect",
-        C_MOUSETRANSPARENT:     "jq-vcw-dp-mousetransparent",
-        C_CONTENTISCONTAINERS:  "jq-vcw-dp-contentiscontainers",
-        C_TOPCONTAINER:         "jq-vcw-dp-topcontainer",
-        C_TABCONTAINER:         "jq-vcw-dp-tabcontainer",
-        C_TABLISTSCROLLBEGIN:   "jq-vcw-dp-tab-scroll-begin",
-        C_TABLISTSCROLLEND:     "jq-vcw-dp-tab-scroll-end",
-        C_TABLIST:              "jq-vcw-dp-tablist",
-        C_TABLEFT:              "jq-vcw-dp-tabsleft",
-        C_TABRIGHT:             "jq-vcw-dp-tabsright",
-        C_TABTOP:               "jq-vcw-dp-tabstop",
-        C_TABBOTTOM:            "jq-vcw-dp-tabsbottom",
-        C_TABLISTCONTAINER:     "jq-vcw-dp-tablistcontainer",
-        C_TABCONTENT:           "jq-vcw-dp-tabcontent",
-        C_ACTIVE:               "jq-vcw-dp-active",
-        C_TABTEXT:              "jq-vcw-dp-tabtext",
-        C_TABSCROLLCONTAINER:   "jq-vcw-dp-tabscrollcontainer"
+        C_MAINCONTAINER:        Constants.Prefix + "maincontainer",
+        C_CONTAINER:            Constants.Prefix + "container",
+        C_CONTAINERCONTENT:     Constants.Prefix + "container-content",
+        C_CONTAINERHANDLER:     Constants.Prefix + "container-handler",
+        C_CONTAINERFLOAT:       Constants.Prefix + "floatcontainer",
+        C_DOCK:                 Constants.Prefix + "dock",
+        C_VERTICAL:             Constants.Prefix + "vertical",
+        C_HORIZONTAL:           Constants.Prefix + "horizontal",
+        C_DROPHIGHLIGHT:        Constants.Prefix + "drop-highlight",
+        C_LEFT:                 Constants.Prefix + "left",
+        C_RIGHT:                Constants.Prefix + "right",
+        C_TOP:                  Constants.Prefix + "top",
+        C_BOTTOM:               Constants.Prefix + "bottom",
+        C_CENTER:               Constants.Prefix + "center",
+        C_TAB:                  Constants.Prefix + "tab",
+        C_TABHIGHLIGHT:         Constants.Prefix + "tabhighlight",
+        C_CONTAINERDROPOVERLAY: Constants.Prefix + "containerdropoverlay",
+        C_GLOBALDROPOVERLAY:    Constants.Prefix + "globaldropoverlay",
+        C_DROPHOVER:            Constants.Prefix + "drop-hover",
+        C_FLOAT:                Constants.Prefix + "float",
+        C_DRAGGING:             Constants.Prefix + "dragging",
+        C_SPLITTER:             Constants.Prefix + "splitter",
+        C_NOUSERSELECT:         Constants.Prefix + "nouserselect",
+        C_MOUSETRANSPARENT:     Constants.Prefix + "mousetransparent",
+        C_CONTENTISCONTAINERS:  Constants.Prefix + "contentiscontainers",
+        C_TOPCONTAINER:         Constants.Prefix + "topcontainer",
+        C_TABCONTAINER:         Constants.Prefix + "tabcontainer",
+        C_TABLISTSCROLLBEGIN:   Constants.Prefix + "tab-scroll-begin",
+        C_TABLISTSCROLLEND:     Constants.Prefix + "tab-scroll-end",
+        C_TABLIST:              Constants.Prefix + "tablist",
+        C_TABLEFT:              Constants.Prefix + "tabsleft",
+        C_TABRIGHT:             Constants.Prefix + "tabsright",
+        C_TABTOP:               Constants.Prefix + "tabstop",
+        C_TABBOTTOM:            Constants.Prefix + "tabsbottom",
+        C_TABLISTCONTAINER:     Constants.Prefix + "tablistcontainer",
+        C_TABCONTENT:           Constants.Prefix + "tabcontent",
+        C_ACTIVE:               Constants.Prefix + "active",
+        C_TABTEXT:              Constants.Prefix + "tabtext",
+        C_TABSCROLLCONTAINER:   Constants.Prefix + "tabscrollcontainer",
+        C_USEDINTAB:            Constants.Prefix + "usedintab"
     });
     
     var Selectors = Object.freeze(
@@ -97,7 +101,9 @@
         S_ACTIVE:               "." + Classes.C_ACTIVE,
         S_TAB:                  "." + Classes.C_TAB,
         S_TABTEXT:              "." + Classes.C_TABTEXT,
-        S_DROPTARGET:           ".jq-vcw-dp-droptarget"
+        S_USEDINTAB:            "." + Classes.C_USEDINTAB,
+        S_TABSCROLLCONTAINER:   "." + Classes.C_TABSCROLLCONTAINER,
+        S_DROPTARGET:           "." + Constants.Prefix + "droptarget"
     });
     
     var DockOptions = Object.freeze(
@@ -136,7 +142,7 @@
     
     function cleanupDockingClasses($p_Container)
     {
-        $p_Container.removeClass([Classes.C_DOCK, Classes.C_VERTICAL, Classes.C_HORIZONTAL, Classes.C_LEFT, Classes.C_RIGHT, Classes.C_TOP, Classes.C_BOTTOM, Classes.C_CENTER, Classes.C_TAB, Classes.C_FLOAT].join(" "));
+        $p_Container.removeClass([Classes.C_DOCK, Classes.C_VERTICAL, Classes.C_HORIZONTAL, Classes.C_LEFT, Classes.C_RIGHT, Classes.C_TOP, Classes.C_BOTTOM, Classes.C_CENTER, Classes.C_TAB, Classes.C_FLOAT, Classes.C_USEDINTAB].join(" "));
     }
     
     function makeResizable($p_Dom)
@@ -429,14 +435,14 @@
                     
                     $GlobalOverlayDiv.load("../jquery.vicowa.dockpanels.droptargets.html " + Selectors.S_GLOBALDROPOVERLAY, function()
                     {
-                        $(Selectors.S_CONTAINER).on("mousemove", function(p_Event)
+                        $(Selectors.S_CONTAINER).not(Selectors.S_USEDINTAB).on("mousemove", function(p_Event)
                         {
                             // find most desired target, which is the top most container with less then 2 child containers
                             var $TargetContainer = $(p_Event.target);
                             
-                            if (!$TargetContainer.hasClass(Classes.C_CONTAINER))
+                            if (!$TargetContainer.hasClass(Classes.C_CONTAINER) || $TargetContainer.hasClass(Classes.C_USEDINTAB))
                             {
-                                $TargetContainer = $TargetContainer.parents(Selectors.S_CONTAINER).filter(":first");
+                                $TargetContainer = $TargetContainer.parents(Selectors.S_CONTAINER).not(Selectors.S_USEDINTAB).filter(":first");
                             }
 
                             if ($TargetContainer.parent(Selectors.S_CONTAINERCONTENT).length && $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length < 2)
@@ -514,10 +520,11 @@
             }).css({position : "absolute"});
         }
     }
-    
+
+    // ensure that the containers that are not used in a tab, are draggable    
     function ensureContainersDraggable()
     {
-        $(Selectors.S_CONTAINER).each(function()
+        $(Selectors.S_CONTAINER).not(Selectors.S_USEDINTAB).each(function()
         {
             attachDraggableToContainer($(this));
         });
@@ -711,6 +718,10 @@
                         }
                     }
                 }
+                else if ($ContainerParent.hasClass(Classes.C_TABCONTAINER))
+                {
+                    
+                }
                 else
                 {
                     throw "All parents should have the " + Classes.C_CONTENTISCONTAINERS + " class";
@@ -723,9 +734,48 @@
         }
     }
     
+    // remove a tab
+    function removeTab($p_Tab)
+    {
+        // use the active tab history to decide which tab to activate after removing the given tab
+        var ActiveTabHistory = $p_Tab.parent().data("activetabhistory");
+        
+        if (ActiveTabHistory)
+        {
+            var ThisTabIndex = ActiveTabHistory.indexOf($p_Tab[0]);
+        
+            if (ThisTabIndex != -1)
+            {
+                ActiveTabHistory.splice(ThisTabIndex, 1);
+            }
+            
+            if (ActiveTabHistory.length)
+            {
+                $(ActiveTabHistory[0]).trigger("click");
+            }
+            else
+            {
+                // if no active tab history is found just activate the first tab
+                $p_Tab.siblings(Selectors.S_TAB).first().trigger("click");
+            }
+        }
+        else
+        {
+            // if no active tab history is found just activate the first tab
+            $p_Tab.siblings(Selectors.S_TAB).first().trigger("click");
+        }
+        
+        $p_Tab.remove();
+        
+        // depending on the settings of the container we might have to revert it back to a normal container
+        
+    }
+    
     function addAsTab($p_TabContainer, $p_Container, $p_Tab)
     {
         resetDocking($p_Container);
+        // clear the draggable from tabbed containers, the tabs will be set draggable instead
+        $p_Container.draggable("destroy");
         var Options = { location: TabOptions.TO_TOP };
         $p_TabContainer.parents(Selectors.S_CONTAINER).filter(":first").addClass(Classes.C_TABCONTAINER);
 
@@ -766,9 +816,85 @@
 
                 $(this).toggleClass(Classes.C_ACTIVE, true);
                 $($(this).data("container")).toggleClass(Classes.C_ACTIVE, true);
+                var ActiveTabHistory = $p_Tab.parent().data("activetabhistory") || [],
+                TabIndex = ActiveTabHistory.indexOf($p_Tab[0]);
+                if (TabIndex >= 0)
+                {
+                    ActiveTabHistory.splice(TabIndex, 1);
+                }
+                
+                ActiveTabHistory.splice(0, 0, $p_Tab[0]);
+                
+                $p_Tab.parent().data("activetabhistory", ActiveTabHistory);
             });
             $p_Tab.find(Selectors.S_TABTEXT).text("tab");
-            $TabContents.append($p_Container);
+            (function()
+            {
+                var $Container = null;
+
+                $p_Tab.draggable({
+                    scroll: false,
+                    iframeFix: true,
+                    start: function(p_Event, p_UI)
+                    {
+                        // first force this tab active
+                        $p_Tab.trigger("click");
+                        
+                        // make sure the tab stays initially within its container
+                        switch (Options.location)
+                        {
+                            case TabOptions.TO_TOP:     p_UI.position.top = p_UI.originalPosition.top; break;
+                            case TabOptions.TO_LEFT:    p_UI.position.left = p_UI.originalPosition.left; break;
+                            case TabOptions.TO_RIGHT:   p_UI.position.left = p_UI.originalPosition.left; break;
+                            case TabOptions.TO_BOTTOM:  p_UI.position.top = p_UI.originalPosition.top; break;
+                        }
+                    },
+                    drag: function(p_Event, p_UI)
+                    {
+                        var UndockDistance = 50,
+                        OffsetDelta = 0;
+                        
+                        // do manual snap like behaviour
+                        switch (Options.location)
+                        {
+                            case TabOptions.TO_LEFT:    
+                            case TabOptions.TO_RIGHT:   OffsetDelta = p_UI.position.left - p_UI.originalPosition.left; if (OffsetDelta < UndockDistance){ p_UI.position.left = p_UI.originalPosition.left;} break;
+                            case TabOptions.TO_TOP:     
+                            case TabOptions.TO_BOTTOM:  OffsetDelta = p_UI.position.top - p_UI.originalPosition.top; if (OffsetDelta < UndockDistance){ p_UI.position.top = p_UI.originalPosition.top;} break;
+                        }
+                        
+                        if (Math.abs(OffsetDelta) >= UndockDistance)
+                        {
+                            // undock tab here and make the container floating
+                            // first find the container that belongs to the tab
+                            $Container = $($p_Tab.data("container"));
+                            
+                            var $OldParent = $Container.parent(),
+                            OldOffset = $OldParent.offset();
+                            floatPanel($Container);
+                            var $NewParent = $Container.parent();
+                            $Container.data("parentChanged", { changed: $OldParent[0] != $NewParent[0], topOffset: OldOffset.top - $NewParent.offset().top, leftOffset: OldOffset.left - $NewParent.offset().left + $Container.outerWidth() * 0.05 });
+                            
+                            removeTab($p_Tab);
+
+                            // use a timeout here to make sure the previous drag operation is totally finished
+                            setTimeout(function()
+                            {
+                                // then continue dragging this new container
+                                attachDraggableToContainer($Container);
+                                $Container.children(Selectors.S_CONTAINERHANDLER).simulate("mousedown", { clientX : p_Event.clientX, clientY : p_Event.clientY });
+                            }, 1);                            
+
+                            return false;
+                        }
+                    },
+                    stop: function(p_Event, p_UI)
+                    {
+                    }
+                });
+            })();
+            
+            $TabContents.append($p_Container.addClass(Classes.C_USEDINTAB));
             $p_Tab.trigger("click");
         }
     }
@@ -793,10 +919,24 @@
 
         if (!$p_TargetContainer.hasClass(Classes.C_TABCONTAINER))
         {
-            $TargetContainerContent.children().not($p_Container).each(function()
+            var $ContentChildren = $TargetContainerContent.children().not($p_Container);
+            // only one child and the child is a tab container -> move all tabs up to this new container
+            if ($ContentChildren.length === 1 && $ContentChildren.hasClass(Classes.C_TABCONTAINER))
             {
-                Queue.push($(this)); 
-            });
+                $ContentChildren.children(Selectors.S_CONTAINERCONTENT).children(Selectors.S_TABCONTENT).children(Selectors.S_CONTAINER).each(function()
+                {
+                    Queue.push($(this)); 
+                });
+                $ContentChildren.remove();
+            }
+            else
+            {
+                // add the children as new tabs
+                $ContentChildren.each(function()
+                {
+                    Queue.push($(this)); 
+                });
+            }
         }
         
         Queue.push($p_Container)
@@ -808,6 +948,7 @@
                 var $Tab = $LoadTarget.find(Selectors.S_TAB);
                 if ($Tab.length)
                 {
+                    $Tab.addClass(Classes.C_NOUSERSELECT);
                     $p_TargetContainer.data("tabtemplate", $Tab[0]);
                     while (Queue.length)
                     {
