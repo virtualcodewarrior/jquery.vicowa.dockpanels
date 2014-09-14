@@ -18,7 +18,7 @@
     'use strict';
     if (typeof define === 'function' && define.amd)
     {
-        define(['jquery', 'jquery-ui'], factory);
+        define(['jquery', 'jquery-ui', 'jquery.simulate'], factory);
     }
     else 
     {
@@ -545,7 +545,6 @@
 
         // create the splitter and set its orientation                        
         $Splitter = $("<div/>").addClass(Classes.C_SPLITTER).addClass(Or);
-        attachDraggableToSplitter($Splitter);
 
         // reorganize so left and top items are before center and right and bottom items are after center        
         switch ($p_DockedContainer.attr("dock"))
@@ -600,6 +599,7 @@
             $p_DockedContainer.css({ left: $Splitter.position().left + $Splitter.outerWidth() });
             break;
         }
+        attachDraggableToSplitter($Splitter);
     }
     
     function ensureFloatsResizable()
@@ -1049,56 +1049,64 @@
         ensureContainersDraggable();
     }
 
-    $.fn.maincontainer = function(p_Options)
+    function mainPanel($p_Panel, p_Options)
     {
-        this.addClass(Classes.C_MAINCONTAINER);
+        $p_Panel.addClass(Classes.C_MAINCONTAINER);
     
         // create a new container for the current content and dock it
-        var $newContainer = dockContainer($("<div/>").append($(this).children()), DockOptions.DO_CENTER);
+        var $newContainer = dockContainer($("<div/>").append($p_Panel.children()), DockOptions.DO_CENTER);
         // this first container cannot be draggable
         $newContainer.draggable("destroy");
         // so it doesn't need a handler either
         $newContainer.children(Selectors.S_CONTAINERHANDLER).remove();
         $newContainer.addClass(Classes.C_TOPCONTAINER);
-        $(this).append($newContainer);
+        $p_Panel.append($newContainer);
         
         // now add a draggable container for is original content
         dockPanel($newContainer, $("<div/>").append($newContainer.children(Selectors.S_CONTAINERCONTENT).children()), DockOptions.DO_TOP);
 
         // create a container for floating panels
-        $("<div/>").appendTo(this).addClass(Classes.C_CONTAINERFLOAT);
+        $("<div/>").appendTo($p_Panel).addClass(Classes.C_CONTAINERFLOAT);
     };
 
-    $.fn.dockcontainer = function(p_Options)
+    $.fn.vicowadockpanel = function(p_Options)
     {
         p_Options = $.extend(
         {
+            main: false,
             dockstate: DockOptions.DO_FLOAT,
             initialsize: { x: "10em", y: "10em" },
         }, p_Options);
         
-        this.each(function()
+        if (p_Options.main)
         {
-            var $This = $("<div/>").appendTo($(this).parent()).append(this);
-            
-            switch (p_Options.dockstate)
+            mainPanel(this, p_Options);
+        }
+        else
+        {
+            this.each(function()
             {
-                case DockOptions.DO_TOP:       $This.css({ height: p_Options.initialsize.y });   break;
-                case DockOptions.DO_BOTTOM:    $This.css({ height: p_Options.initialsize.y });break;
-                case DockOptions.DO_LEFT:      $This.css({ width: p_Options.initialsize.x });  break;
-                case DockOptions.DO_RIGHT:     $This.css({ width: p_Options.initialsize.x }); break;
-            }
-    
-            if (p_Options.dockstate != DockOptions.DO_FLOAT)
-            {
-                dockPanel($This.parents(Selectors.S_CONTAINER).first(), $This, p_Options.dockstate);
-            }
-            else
-            {
-                $This.css({ width: p_Options.initialsize.x, height: p_Options.initialsize.y });
-                floatPanel($This);
-            }
-        });
+                var $This = $("<div/>").appendTo($(this).parent()).append(this);
+                
+                switch (p_Options.dockstate)
+                {
+                    case DockOptions.DO_TOP:       $This.css({ height: p_Options.initialsize.y });   break;
+                    case DockOptions.DO_BOTTOM:    $This.css({ height: p_Options.initialsize.y });break;
+                    case DockOptions.DO_LEFT:      $This.css({ width: p_Options.initialsize.x });  break;
+                    case DockOptions.DO_RIGHT:     $This.css({ width: p_Options.initialsize.x }); break;
+                }
+        
+                if (p_Options.dockstate != DockOptions.DO_FLOAT)
+                {
+                    dockPanel($This.parents(Selectors.S_CONTAINER).first(), $This, p_Options.dockstate);
+                }
+                else
+                {
+                    $This.css({ width: p_Options.initialsize.x, height: p_Options.initialsize.y });
+                    floatPanel($This);
+                }
+            });
+        }
     };
 }));
 
