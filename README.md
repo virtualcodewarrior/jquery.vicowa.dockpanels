@@ -29,6 +29,9 @@ This command accepts the following properties
 | dockstate | top, left, right, bottom, float | Indicates the initial dock position for the given panel, where float means not docked and instead is "floating" over the other panels |
 
 ```javascript
+
+Example of use:
+
 $("document").ready(function()
 {
     // get the children before excuting vicowadockpanel, because content will be reordered so children might not give the expected result

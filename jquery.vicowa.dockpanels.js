@@ -28,6 +28,7 @@
 {
     'use strict';
     
+    var LastID = 0;
     var Constants = Object.freeze({ Prefix: "jq-vcw-dp-" });
     
     var Classes = Object.freeze(
@@ -680,6 +681,12 @@
                                     
                                     if ($ChildContainer.hasClass(Classes.C_CONTAINER))
                                     {
+                                        // if this is a tab container we have to move the class to the parent container
+                                        if ($ChildContainer.hasClass(Classes.C_TABCONTAINER))
+                                        {
+                                            $ContainerParent.addClass(Classes.C_TABCONTAINER);
+                                            $ChildContainer.removeClass(Classes.C_TABCONTAINER);
+                                        }
                                         // since there is only a single container left, we can move this child's content and handler info into the parent
                                         var $ContainerContent = $ChildContainer.children();
                                         $ContainerParent.children().remove();
@@ -737,6 +744,8 @@
     // remove a tab
     function removeTab($p_Tab)
     {
+        var KeepTabs = false; // for now, will change this to an option later
+        
         // use the active tab history to decide which tab to activate after removing the given tab
         var ActiveTabHistory = $p_Tab.parent().data("activetabhistory");
         
@@ -765,17 +774,36 @@
             $p_Tab.siblings(Selectors.S_TAB).first().trigger("click");
         }
         
+        var $SibLings = $p_Tab.siblings(Selectors.S_TAB);
+        
         $p_Tab.remove();
         
-        // depending on the settings of the container we might have to revert it back to a normal container
-        
+        // depending on the settings of the container we might have to revert it back to a normal container when only one tab remains
+        if (!KeepTabs && $SibLings.length === 1)
+        {
+            var $TabContainer = $SibLings.parents(Selectors.S_TABCONTAINER).first();
+            // revert back to a normal container
+            var $ContainerContent = $TabContainer.children(Selectors.S_CONTAINERCONTENT);
+            
+            // first remove the tab list
+            $ContainerContent.children(Selectors.S_TABLISTCONTAINER).remove();
+            // then move the content of the remaining tab into the container content
+            $ContainerContent.find(Selectors.S_CONTAINERCONTENT).first().children().appendTo($ContainerContent);
+            // then remove the tab content
+            $ContainerContent.children(Selectors.S_TABCONTENT).remove();
+            // then remove the tab container class from the parent
+            $TabContainer.removeClass(Classes.C_TABCONTAINER);
+        }
     }
     
     function addAsTab($p_TabContainer, $p_Container, $p_Tab)
     {
         resetDocking($p_Container);
-        // clear the draggable from tabbed containers, the tabs will be set draggable instead
-        $p_Container.draggable("destroy");
+        if ($p_Container.draggable("instance"))
+        {
+            // clear the draggable from tabbed containers, the tabs will be set draggable instead
+            $p_Container.draggable("destroy");
+        }
         var Options = { location: TabOptions.TO_TOP };
         $p_TabContainer.parents(Selectors.S_CONTAINER).filter(":first").addClass(Classes.C_TABCONTAINER);
 
@@ -830,7 +858,9 @@
             $p_Tab.find(Selectors.S_TABTEXT).text("tab");
             (function()
             {
-                var $Container = null;
+                var $Container = null,
+                $HoveredTab = null,
+                $TabSiblings = null;
 
                 $p_Tab.draggable({
                     scroll: false,
@@ -848,6 +878,13 @@
                             case TabOptions.TO_RIGHT:   p_UI.position.left = p_UI.originalPosition.left; break;
                             case TabOptions.TO_BOTTOM:  p_UI.position.top = p_UI.originalPosition.top; break;
                         }
+                        
+                        $TabSiblings = $p_Tab.parent().children(Selectors.S_TAB).not($p_Tab);
+                        $TabSiblings.on("mouseenter", function()
+                        {
+                            $HoveredTab = $(this); 
+                        });
+                        $p_Tab.addClass(Classes.C_MOUSETRANSPARENT);
                     },
                     drag: function(p_Event, p_UI)
                     {
@@ -876,6 +913,7 @@
                             $Container.data("parentChanged", { changed: $OldParent[0] != $NewParent[0], topOffset: OldOffset.top - $NewParent.offset().top, leftOffset: OldOffset.left - $NewParent.offset().left + $Container.outerWidth() * 0.05 });
                             
                             removeTab($p_Tab);
+                            $p_Tab = null;
 
                             // use a timeout here to make sure the previous drag operation is totally finished
                             setTimeout(function()
@@ -890,6 +928,22 @@
                     },
                     stop: function(p_Event, p_UI)
                     {
+                        if ($p_Tab)
+                        {
+                            // find the tab we are hovering and insert this tab before or after that tab
+                            if (p_Event.pageX > $HoveredTab.offset().left + $HoveredTab.width()/2)
+                            {
+                                $p_Tab.insertAfter($HoveredTab);
+                            }
+                            else
+                            {
+                                $p_Tab.insertBefore($HoveredTab);
+                            }
+                            $p_Tab.removeAttr("style");
+                            $p_Tab.removeClass(Classes.C_MOUSETRANSPARENT);
+                        }   
+                        
+                        $TabSiblings.off("hover");
                     }
                 });
             })();
@@ -994,7 +1048,7 @@
 
                 // find most desired target, which is the top most container with less then 2 child containers
                 var $TargetContainer = $p_TargetContainer;
-                
+
                 if ($TargetContainer.parent(Selectors.S_CONTAINERCONTENT).length && $TargetContainer.parent(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length < 2)
                 {
                     // the parent of the target only contains one panel, so we can just dock this new one as a sibling of the target
@@ -1009,7 +1063,14 @@
                 {
                     // also add a center one and move the exiting content of the target container into it
                     $newCenter = dockContainer($("<div/>").append($Children), DockOptions.DO_CENTER, { x: "75%", y: "75%" }, { title : "" });
-                    if ($newCenter.children(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length !== 0)
+                    
+                    // move the tab container class to the new center
+                    if ($TargetContainer.hasClass(Classes.C_TABCONTAINER))
+                    {
+                        $newCenter.addClass(Classes.C_TABCONTAINER);
+                        $TargetContainer.removeClass(Classes.C_TABCONTAINER);
+                    }
+                    else if ($newCenter.children(Selectors.S_CONTAINERCONTENT).children(Selectors.S_CONTAINER).length !== 0)
                     {
                         $newCenter.addClass(Classes.C_CONTENTISCONTAINERS);
                     }
@@ -1055,8 +1116,11 @@
     
         // create a new container for the current content and dock it
         var $newContainer = dockContainer($("<div/>").append($p_Panel.children()), DockOptions.DO_CENTER);
-        // this first container cannot be draggable
-        $newContainer.draggable("destroy");
+        if ($newContainer.draggable("instance"))
+        {
+            // this first container cannot be draggable
+            $newContainer.draggable("destroy");
+        }
         // so it doesn't need a handler either
         $newContainer.children(Selectors.S_CONTAINERHANDLER).remove();
         $newContainer.addClass(Classes.C_TOPCONTAINER);
@@ -1076,7 +1140,13 @@
             main: false,
             dockstate: DockOptions.DO_FLOAT,
             initialsize: { x: "10em", y: "10em" },
+            id: null
         }, p_Options);
+        
+        if (p_Options.id === null)
+        {
+            p_Options.id = LastID + 1;
+        }
         
         if (p_Options.main)
         {
@@ -1107,6 +1177,67 @@
                 }
             });
         }
+    };
+    
+    function backupBranch($p_DockPanel)
+    {
+        var Backup = 
+        {
+            dock: $p_DockPanel.attr("dock"),
+            tabs: false,
+            children: []
+        },
+        $Content = $p_DockPanel.children(Selectors.S_CONTAINERCONTENT);
+        
+        if ($Content.hasClass(Classes.C_TABCONTAINER))
+        {
+            Backup.tabs = true;
+
+            $Content.children(Selectors.S_TABCONTENT).children(Selectors.S_CONTAINER).each(function()
+            {
+               Backup.children.push(backupBranch($(this))); 
+            });
+        }
+        else if ($Content.hasClass(Classes.C_CONTENTISCONTAINERS))
+        {
+            $Content.children(Selectors.S_CONTAINER).each(function()
+            {
+               Backup.children.push(backupBranch($(this))); 
+            });
+        }
+
+        return Backup;
+    }
+    
+    // save the current state for all the dock panels and return the backup object
+    $.fn.vicowadockpanelbackup = function()
+    {
+        var Backup = [];
+        this.each(function()
+        {
+            var $This = $(this);
+            if ($This.hasClass(Classes.C_MAINCONTAINER))
+            {
+                $This = $This.children(Selectors.S_CONTAINER).first();
+            }
+
+            if ($This.hasClass(Classes.C_CONTAINER))
+            {
+                Backup.push(backupBranch($This));
+            }
+            else
+            {
+                throw "vicowadockpanelbackup can only be called on the main container or a child container";
+            }
+        });
+        
+        return Backup;
+    };
+    
+    // restore the dockpanels to the state given in the backup object
+    $.fn.vicowadockpanelrestore = function(p_BackupData)
+    {
+        
     };
 }));
 
