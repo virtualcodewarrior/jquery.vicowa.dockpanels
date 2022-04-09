@@ -1198,7 +1198,7 @@
                Backup.children.push(backupBranch($(this))); 
             });
         }
-        else if ($Content.hasClass(Classes.C_CONTENTISCONTAINERS))
+        else if ($p_DockPanel.hasClass(Classes.C_CONTENTISCONTAINERS))
         {
             $Content.children(Selectors.S_CONTAINER).each(function()
             {
@@ -1218,6 +1218,17 @@
             var $This = $(this);
             if ($This.hasClass(Classes.C_MAINCONTAINER))
             {
+                // backup float panel here
+                var $Float = $This.children(Selectors.S_CONTAINERFLOAT).first();
+                
+                var FloatChildren = [];
+                $Float.children(Selectors.S_CONTAINER).each(function()
+                {
+                    FloatChildren.push(backupBranch($(this)));
+                });
+                
+                Backup.push({ floating: FloatChildren });
+
                 $This = $This.children(Selectors.S_CONTAINER).first();
             }
 

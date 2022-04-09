@@ -5,4 +5,7 @@ $("document").ready(function()
     $(".maincontainer").vicowadockpanel({ main: true });
     $Children.vicowadockpanel({ dockstate: "top" });
     $(".dockcontainer").find(".dockcontainer").vicowadockpanel({ dockstate: "float" });
+    
+    var Data = $(".maincontainer").vicowadockpanelbackup();
+    alert(JSON.stringify(Data));
 });
